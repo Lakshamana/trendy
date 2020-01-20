@@ -1,4 +1,9 @@
 const { sign, verify } = require('jsonwebtoken')
+const { SecretsManager } = require('aws-sdk')
+const { stringify } = require('querystring')
+const axios = require('../plugins/axios.plugin')
+
+const sm = new SecretsManager()
 
 const SECS_PER_DAY = 60 * 60 * 24
 
@@ -46,4 +51,34 @@ function getCookie(headers) {
   return list
 }
 
-module.exports = { tokenSign, tokenVerify, getCookie }
+async function getSecret(SecretId) {
+  const { SecretString } = await sm.getSecretValue({ SecretId }).promise()
+  return JSON.parse(SecretString)
+}
+
+/**
+ *
+ * @param {Function => Promise} cb
+ * @returns {Promise} the original request payload
+ */
+async function twitterAuth(cb) {
+  const tokens = await getSecret('TrendySecrets')
+  try {
+    return await cb(tokens.TWT_BEARER_TOKEN)
+  } catch (e) {
+    const formData = stringify({ grant_type: 'client_credentials' })
+    const { TWT_API_KEY, TWT_API_SECRET } = tokens
+    const b64Encoded = Buffer.from(TWT_API_KEY + ':' + TWT_API_SECRET).toString(
+      'base64'
+    )
+    const { access_token } = await axios.post('/oauth2/token', formData, {
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        Authorization: 'Basic ' + b64Encoded
+      }
+    })
+    return await cb(access_token)
+  }
+}
+
+module.exports = { tokenSign, tokenVerify, getCookie, twitterAuth }
