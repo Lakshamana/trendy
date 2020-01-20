@@ -1,14 +1,15 @@
 service: trendy
 
-env:
-  tableName: Users
+custom:
+  env:
+    tableName: Users
 
 provider:
   name: aws
   runtime: nodejs12.x
   region: sa-east-1
   profile: default
-  environment: ${self:env}
+  environment: ${self:custom.env}
 
 iamRoleStatements:
   - Effect: Allow
@@ -55,14 +56,14 @@ resources:
     Users:
       Type: AWS::DynamoDB::Table
       Properties:
-        TableName: ${self:env.tableName}
+        TableName: ${self:custom.env.tableName}
         AttributeDefinitions:
           - AttributeName: id
             AttributeType: S
           - AttributeName: password
             AttributeType: S
-          KeySchema:
+        KeySchema:
           - AttributeName: id
-          KeyType: HASH
+            KeyType: HASH
           - AttributeName: password
-          KeyType: HASH
+            KeyType: HASH
