@@ -4,10 +4,14 @@ custom:
   env:
     tableName: Users
 
+plugins:
+  - serverless-dynamodb-local
+
 provider:
   name: aws
   runtime: nodejs12.x
-  region: sa-east-1
+  region: ddblocal
+  endpoint: http://localhost:8000
   profile: default
   environment: ${self:custom.env}
 
@@ -60,10 +64,9 @@ resources:
         AttributeDefinitions:
           - AttributeName: id
             AttributeType: S
-          - AttributeName: password
-            AttributeType: S
         KeySchema:
           - AttributeName: id
             KeyType: HASH
-          - AttributeName: password
-            KeyType: HASH
+      ProvisionedThroughput:
+        ReadCapacityUnits: 1
+        WriteCapacityUnits: 1
