@@ -10,8 +10,7 @@ plugins:
 provider:
   name: aws
   runtime: nodejs12.x
-  region: ddblocal
-  endpoint: http://localhost:8000
+  region: sa-east-1
   profile: default
   environment: ${self:custom.env}
 
@@ -28,32 +27,32 @@ functions:
     handler: handler.register
     events:
       - http:
-        path: register
-        method: post
+          path: /register
+          method: post
   login:
     handler: handler.login
     events:
       - http:
-        path: login
-        method: post
+          path: /login
+          method: post
   auth:
     handler: handler.auth
     events:
       - http:
-        path: auth
-        method: post
+          path: /auth
+          method: post
   getCities:
     handler: handler.getCities
     events:
       - http:
-        path: cities
-        method: get
+          path: /cities
+          method: get
   getTrends:
     handler: handler.getTrends
     events:
       - http:
-        path: trends
-        method: get
+          path: /trends
+          method: get
 
 resources:
   Resources:
@@ -67,6 +66,6 @@ resources:
         KeySchema:
           - AttributeName: id
             KeyType: HASH
-      ProvisionedThroughput:
-        ReadCapacityUnits: 1
-        WriteCapacityUnits: 1
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
