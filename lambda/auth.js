@@ -2,20 +2,21 @@ const { hashSync } = require('bcrypt')
 const { DynamoDB } = require('aws-sdk')
 const { tokenSign, tokenVerify, getCookie } = require('./utils')
 
-const db = new DynamoDB.DocumentClient()
+const db = new DynamoDB.DocumentClient({ region: 'sa-east-1' })
 
 async function register(evt) {
-  const { username, password } = evt
-
+  const { username, password } = JSON.parse(evt.body)
+  console.log(username, password)
   if (!username || !password) {
     return {
       statusCode: 400,
-      body: {
+      body: JSON.stringify({
         messageCode: 'badRequestPayload'
-      }
+      })
     }
   }
 
+  console.log('before get user')
   const user = await db
     .get({
       TableName: 'Users',
@@ -24,13 +25,14 @@ async function register(evt) {
       }
     })
     .promise()
+  console.log('after get user:', user)
 
   if (user) {
     return {
       statusCode: 400,
-      body: {
+      body: JSON.stringify({
         messageCode: 'usernameAlreadyExists'
-      }
+      })
     }
   }
 
@@ -41,18 +43,18 @@ async function register(evt) {
 
   await db.put(params).promise()
 
-  return { statusCode: 201, body: {} }
+  return { statusCode: 201, body: JSON.stringify({}) }
 }
 
 async function login(evt) {
-  const { username, password, rememberMe } = evt
+  const { username, password, rememberMe } = JSON.parse(evt.body)
 
   if (!username || !password) {
     return {
       statusCode: 400,
-      body: {
+      body: JSON.stringify({
         messageCode: 'badRequestPayload'
-      }
+      })
     }
   }
 
@@ -68,9 +70,9 @@ async function login(evt) {
   if (!user) {
     return {
       statusCode: 400,
-      body: {
+      body: JSON.stringify({
         messageCode: 'usernameDoesNotExist'
-      }
+      })
     }
   }
 
@@ -81,32 +83,32 @@ async function login(evt) {
   }
 }
 
-function auth(evt) {
+function auth(evt, _, cb) {
   const { accessToken } = getCookie(evt.headers)
   if (!accessToken) {
-    return {
+    cb(null, {
       statusCode: 400,
-      body: {
+      body: JSON.stringify({
         messageCode: 'badAuthPayload'
-      }
-    }
+      })
+    })
   }
 
   try {
     tokenVerify(accessToken)
   } catch (e) {
-    return {
+    cb(null, {
       statusCode: 400,
-      body: {
+      body: JSON.stringify({
         messageCode: 'badAuthPayload'
-      }
-    }
+      })
+    })
   }
 
-  return {
+  cb(null, {
     statusCode: 200,
-    body: {}
-  }
+    body: JSON.stringify({})
+  })
 }
 
 module.exports = { register, login, auth }

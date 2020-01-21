@@ -10,12 +10,12 @@ async function getRegions() {
   )
   return {
     statusCode: 200,
-    body: { cities }
+    body: JSON.stringify({ cities })
   }
 }
 
 async function getTrends(evt) {
-  const { woeid: id } = evt['queryStringParameters']
+  const { woeid: id } = JSON.parse(evt.body).queryStringParameters
   const trends = await twitterAuth(token =>
     axios.get('/1.1/trends/place.json', {
       headers: { Authorization: 'Bearer ' + token },
@@ -24,7 +24,7 @@ async function getTrends(evt) {
   )
   return {
     statusCode: 200,
-    body: { trends }
+    body: JSON.stringify({ trends })
   }
 }
 
