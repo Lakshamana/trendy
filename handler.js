@@ -10,7 +10,7 @@ async function getRegions() {
   )
   return {
     statusCode: 200,
-    cities
+    body: { cities }
   }
 }
 
@@ -24,7 +24,7 @@ async function getTrends(evt) {
   )
   return {
     statusCode: 200,
-    trends
+    body: { trends }
   }
 }
 

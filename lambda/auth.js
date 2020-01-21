@@ -10,7 +10,9 @@ async function register(evt) {
   if (!username || !password) {
     return {
       statusCode: 400,
-      messageCode: 'badRequestPayload'
+      body: {
+        messageCode: 'badRequestPayload'
+      }
     }
   }
 
@@ -26,7 +28,9 @@ async function register(evt) {
   if (user) {
     return {
       statusCode: 400,
-      messageCode: 'usernameAlreadyExists'
+      body: {
+        messageCode: 'usernameAlreadyExists'
+      }
     }
   }
 
@@ -37,7 +41,7 @@ async function register(evt) {
 
   await db.put(params).promise()
 
-  return { statusCode: 201 }
+  return { statusCode: 201, body: {} }
 }
 
 async function login(evt) {
@@ -46,7 +50,9 @@ async function login(evt) {
   if (!username || !password) {
     return {
       statusCode: 400,
-      messageCode: 'badRequestPayload'
+      body: {
+        messageCode: 'badRequestPayload'
+      }
     }
   }
 
@@ -62,7 +68,9 @@ async function login(evt) {
   if (!user) {
     return {
       statusCode: 400,
-      messageCode: 'usernameDoesNotExist'
+      body: {
+        messageCode: 'usernameDoesNotExist'
+      }
     }
   }
 
@@ -78,7 +86,9 @@ function auth(evt) {
   if (!accessToken) {
     return {
       statusCode: 400,
-      messageCode: 'badAuthPayload'
+      body: {
+        messageCode: 'badAuthPayload'
+      }
     }
   }
 
@@ -87,12 +97,15 @@ function auth(evt) {
   } catch (e) {
     return {
       statusCode: 400,
-      messageCode: 'badAuthPayload'
+      body: {
+        messageCode: 'badAuthPayload'
+      }
     }
   }
 
   return {
-    statusCode: 200
+    statusCode: 200,
+    body: {}
   }
 }
 

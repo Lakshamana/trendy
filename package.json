@@ -7,7 +7,7 @@
     "start": "webpack-dev-server --mode development --open --hot",
     "serve:dev": "serverless local-dev-server --port 5000",
     "build": "webpack --mode production",
-    "predeploy": "rm -rf node_modules/bcrypt && npm i --platform=linux --arch=x64 --target=12.x bcrypt",
+    "predeploy": "rm -rf node_modules/bcrypt && npm i --platform=linux --arch=x64 --target=12.14.1 bcrypt",
     "deploy": "serverless deploy -v"
   },
   "keywords": [],

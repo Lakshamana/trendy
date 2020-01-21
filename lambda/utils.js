@@ -63,6 +63,7 @@ async function getSecret(SecretId) {
  */
 async function twitterAuth(cb) {
   const tokens = await getSecret('TrendySecrets')
+  console.log('TOKENS:', tokens)
   try {
     return await cb(tokens.TWT_BEARER_TOKEN)
   } catch (e) {
