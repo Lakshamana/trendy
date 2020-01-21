@@ -7,17 +7,17 @@ const sm = new SecretsManager()
 
 const SECS_PER_DAY = 60 * 60 * 24
 
-const secret = 'super-secret'
-
-function tokenSign(user, rememberMeFactor = 7) {
+async function tokenSign(user, rememberMeFactor = 7) {
   const { rememberMe } = user
   const ttl = SECS_PER_DAY * (rememberMe ? rememberMeFactor : 1)
   const exp = Math.floor(Date.now() / 1000) + ttl
-  return sign({ user, exp }, secret)
+  const { JWT_SECRET } = await getSecret('TrendySecrets')
+  return sign({ user, exp }, JWT_SECRET)
 }
 
-function tokenVerify(token) {
-  verify(token, secret)
+async function tokenVerify(token) {
+  const { JWT_SECRET } = await getSecret('TrendySecrets')
+  verify(token, JWT_SECRET)
 }
 
 /**
@@ -56,6 +56,11 @@ async function getSecret(SecretId) {
   return JSON.parse(SecretString)
 }
 
+async function putSecret(SecretId, secretJson) {
+  const SecretString = JSON.stringify(secretJson)
+  await sm.putSecretValue({ SecretId, SecretString }).promise()
+}
+
 /**
  *
  * @param {Function} cb
@@ -63,22 +68,23 @@ async function getSecret(SecretId) {
  */
 async function twitterAuth(cb) {
   const tokens = await getSecret('TrendySecrets')
-  console.log('TOKENS:', tokens)
   try {
-    return await cb(tokens.TWT_BEARER_TOKEN)
+    return (await cb(tokens.TWT_BEARER_TOKEN)).data
   } catch (e) {
     const formData = stringify({ grant_type: 'client_credentials' })
     const { TWT_API_KEY, TWT_API_SECRET } = tokens
     const b64Encoded = Buffer.from(TWT_API_KEY + ':' + TWT_API_SECRET).toString(
       'base64'
     )
-    const { access_token } = await axios.post('/oauth2/token', formData, {
+    const { data } = await axios.post('/oauth2/token', formData, {
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
         Authorization: 'Basic ' + b64Encoded
       }
     })
-    return await cb(access_token)
+    tokens.TWT_BEARER_TOKEN = data.access_token
+    await putSecret('TrendySecrets', tokens)
+    return (await cb(data.access_token)).data
   }
 }
 

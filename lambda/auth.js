@@ -6,7 +6,6 @@ const db = new DynamoDB.DocumentClient({ region: 'sa-east-1' })
 
 async function register(evt) {
   const { username, password } = JSON.parse(evt.body)
-  console.log(username, password)
   if (!username || !password) {
     return {
       statusCode: 400,
@@ -16,7 +15,6 @@ async function register(evt) {
     }
   }
 
-  console.log('before get user')
   const { Item } = await db
     .get({
       TableName: 'Users',
@@ -25,7 +23,6 @@ async function register(evt) {
       }
     })
     .promise()
-  console.log('after get user:', Item)
 
   if (Item) {
     return {
@@ -85,40 +82,40 @@ async function login(evt) {
     }
   }
 
-  const accessToken = tokenSign({ Item, rememberMe })
+  const accessToken = await tokenSign({ Item, rememberMe })
   return {
     statusCode: 200,
-    headers: { 'Set-Cookie': 'cookie=' + accessToken },
+    headers: { 'Set-Cookie': 'accessToken=' + accessToken },
     body: JSON.stringify({})
   }
 }
 
-function auth(evt, _, cb) {
+async function auth(evt) {
   const { accessToken } = getCookie(evt.headers)
   if (!accessToken) {
-    cb(null, {
+    return {
       statusCode: 400,
       body: JSON.stringify({
         messageCode: 'badAuthPayload'
       })
-    })
+    }
   }
 
   try {
     tokenVerify(accessToken)
   } catch (e) {
-    cb(null, {
+    return {
       statusCode: 400,
       body: JSON.stringify({
         messageCode: 'badAuthPayload'
       })
-    })
+    }
   }
 
-  cb(null, {
+  return {
     statusCode: 200,
     body: JSON.stringify({})
-  })
+  }
 }
 
 module.exports = { register, login, auth }
