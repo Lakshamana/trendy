@@ -37,12 +37,12 @@ functions:
       - http:
           path: /login
           method: post
-  # auth:
-  #   handler: handler.auth
-  #   events:
-  #     - http:
-  #         path: /auth
-  #         method: post
+  auth:
+    handler: handler.auth
+    # events:
+    #   - http:
+    #       path: /auth
+    #       method: post
   getRegions:
     handler: handler.getRegions
     events:
