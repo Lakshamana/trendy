@@ -88,7 +88,7 @@ async function login(evt) {
   const accessToken = tokenSign({ Item, rememberMe })
   return {
     statusCode: 200,
-    headers: { 'Set-Cookie': { accessToken } },
+    headers: { 'Set-Cookie': 'cookie=' + accessToken },
     body: JSON.stringify({})
   }
 }

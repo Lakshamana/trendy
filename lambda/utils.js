@@ -13,7 +13,7 @@ function tokenSign(user, rememberMeFactor = 7) {
   const { rememberMe } = user
   const ttl = SECS_PER_DAY * (rememberMe ? rememberMeFactor : 1)
   const exp = Math.floor(Date.now() / 1000) + ttl
-  sign({ user, exp }, secret)
+  return sign({ user, exp }, secret)
 }
 
 function tokenVerify(token) {
