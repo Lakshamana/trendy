@@ -2,7 +2,7 @@ const auth = require('./lambda/auth')
 const { twitterAuth } = require('./lambda/utils')
 const axios = require('./plugins/axios.plugin')
 
-async function getCities() {
+async function getRegions() {
   const cities = await twitterAuth(token =>
     axios.get('/1.1/trends/available.json', {
       headers: { Authorization: 'Bearer ' + token }
@@ -28,4 +28,4 @@ async function getTrends(evt) {
   }
 }
 
-module.exports = { ...auth, getCities, getTrends }
+module.exports = { ...auth, getRegions, getTrends }

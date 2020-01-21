@@ -4,9 +4,6 @@ custom:
   env:
     tableName: Users
 
-plugins:
-  - serverless-dynamodb-local
-
 provider:
   name: aws
   runtime: nodejs12.x
@@ -41,11 +38,11 @@ functions:
       - http:
           path: /auth
           method: post
-  getCities:
-    handler: handler.getCities
+  getRegions:
+    handler: handler.getRegions
     events:
       - http:
-          path: /cities
+          path: /regions
           method: get
   getTrends:
     handler: handler.getTrends

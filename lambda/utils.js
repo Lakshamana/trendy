@@ -58,7 +58,7 @@ async function getSecret(SecretId) {
 
 /**
  *
- * @param {Function => Promise} cb
+ * @param {Function} cb
  * @returns {Promise} the original request payload
  */
 async function twitterAuth(cb) {

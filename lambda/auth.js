@@ -5,7 +5,6 @@ const { tokenSign, tokenVerify, getCookie } = require('./utils')
 const db = new DynamoDB.DocumentClient()
 
 async function register(evt) {
-  console.log('evt:', evt)
   const { username, password } = evt
 
   if (!username || !password) {
