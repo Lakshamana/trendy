@@ -1,4 +1,4 @@
-const { hashSync } = require('bcrypt')
+const { hashSync, compareSync } = require('bcrypt')
 const { DynamoDB } = require('aws-sdk')
 const { tokenSign, tokenVerify, getCookie } = require('./utils')
 
@@ -17,7 +17,7 @@ async function register(evt) {
   }
 
   console.log('before get user')
-  const user = await db
+  const { Item } = await db
     .get({
       TableName: 'Users',
       Key: {
@@ -25,9 +25,9 @@ async function register(evt) {
       }
     })
     .promise()
-  console.log('after get user:', user)
+  console.log('after get user:', Item)
 
-  if (user) {
+  if (Item) {
     return {
       statusCode: 400,
       body: JSON.stringify({
@@ -58,7 +58,7 @@ async function login(evt) {
     }
   }
 
-  const user = await db
+  const { Item } = await db
     .get({
       TableName: 'Users',
       Key: {
@@ -67,7 +67,7 @@ async function login(evt) {
     })
     .promise()
 
-  if (!user) {
+  if (!Item) {
     return {
       statusCode: 400,
       body: JSON.stringify({
@@ -76,10 +76,20 @@ async function login(evt) {
     }
   }
 
-  const accessToken = tokenSign({ user, rememberMe })
+  if (!compareSync(password, Item.password)) {
+    return {
+      statusCode: 400,
+      body: JSON.stringify({
+        messageCode: 'authDataMismatch'
+      })
+    }
+  }
+
+  const accessToken = tokenSign({ Item, rememberMe })
   return {
     statusCode: 200,
-    headers: { 'Set-Cookie': accessToken }
+    headers: { 'Set-Cookie': { accessToken } },
+    body: JSON.stringify({})
   }
 }
 
