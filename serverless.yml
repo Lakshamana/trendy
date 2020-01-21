@@ -10,14 +10,19 @@ provider:
   region: sa-east-1
   profile: default
   environment: ${self:custom.env}
-
-iamRoleStatements:
-  - Effect: Allow
-    Action:
-      - dynamodb:GetItem
-      - dynamodb:PutItem
-    Resource:
-      - arn:aws:dynamodb:sa-east-1:654824557816:table/Users
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+      Resource:
+        - arn:aws:dynamodb:sa-east-1:654824557816:table/Users
+    - Effect: Allow
+      Action:
+        - secretsmanager:GetSecretValue
+        - secretsmanager:PutSecretValue
+      Resource:
+        - arn:aws:secretsmanager:sa-east-1:654824557816:secret:TrendySecrets-kyZbpE
 
 functions:
   register:
