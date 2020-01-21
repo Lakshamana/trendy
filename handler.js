@@ -15,13 +15,14 @@ async function getRegions() {
 }
 
 async function getTrends(evt) {
-  const { woeid: id } = evt.queryStringParameters
-  const { trends } = await twitterAuth(token =>
+  const { id } = evt.queryStringParameters
+  const data = await twitterAuth(token =>
     axios.get('/1.1/trends/place.json', {
       headers: { Authorization: 'Bearer ' + token },
       params: { id }
     })
   )
+  const { trends } = data[0]
   return {
     statusCode: 200,
     body: JSON.stringify({ trends })
