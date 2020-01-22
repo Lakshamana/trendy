@@ -1,12 +1,12 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import './css/Navbar.css'
 
-const Navbar = props => {
-  console.log(props)
+const Navbar = () => {
   return (
-    <nav className='nav-wrapper indigo darken-4'>
+    <nav className='nav-wrapper nav-custom blue lighten-1'>
       <Link to='/' className='brand-logo'>
-        Bloggy
+        Trendy
       </Link>
       <ul className='right'>
         <li>
