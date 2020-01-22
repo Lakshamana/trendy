@@ -1,8 +1,7 @@
 const auth = require('./lambda/auth')
 const { twitterAuth } = require('./lambda/utils')
+const { twitterAPI } = require('./shared/app.constants')
 const axios = require('./plugins/axios.plugin')
-
-const twitterAPI = 'https://api.twitter.com'
 
 async function getRegions() {
   const cities = await twitterAuth(() =>

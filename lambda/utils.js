@@ -1,7 +1,9 @@
 const { sign, verify } = require('jsonwebtoken')
 const { SecretsManager } = require('aws-sdk')
 const { stringify } = require('querystring')
+
 const axios = require('../plugins/axios.plugin')
+const { twitterAPI } = require('./shared/app.constants')
 
 const sm = new SecretsManager()
 
@@ -76,7 +78,7 @@ async function twitterAuth(cb) {
     const b64Encoded = Buffer.from(TWT_API_KEY + ':' + TWT_API_SECRET).toString(
       'base64'
     )
-    const { data } = await axios.post('/oauth2/token', formData, {
+    const { data } = await axios.post(twitterAPI + '/oauth2/token', formData, {
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
         Authorization: 'Basic ' + b64Encoded

@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react'
-// import pDebounce from 'p-debounce'
-const axios = require('../../plugins/axios.plugin')
 // import { Autocomplete } from 'materialize-css/dist/js/materialize'
 // import './css/Home.css'
 
-const baseURL = 'https://bepzok3gq8.execute-api.sa-east-1.amazonaws.com/dev'
+const axios = require('../../plugins/axios.plugin')
+const { trendyAPI } = require('../../shared/app.constants')
 
 // /**
 //  * Use it to materialize css autocomplete
@@ -27,7 +26,7 @@ const Home = () => {
   let autocompleteRef = React.createRef()
 
   useEffect(() => {
-    axios.get(baseURL + '/regions').then(({ data }) => {
+    axios.get(trendyAPI + '/regions').then(({ data }) => {
       const cities = data.cities.slice(1, 100)
       setRegions(cities)
       console.log('regions:', regions)
