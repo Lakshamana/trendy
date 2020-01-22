@@ -1,4 +1,5 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const { join } = require('path')
 
 const htmlPlugin = new HtmlWebpackPlugin({
@@ -6,7 +7,16 @@ const htmlPlugin = new HtmlWebpackPlugin({
   filename: './index.html'
 })
 
+const devMode = process.env.NODE_ENV === 'development'
+
 module.exports = {
+  plugins: [
+    htmlPlugin,
+    new MiniCssExtractPlugin({
+      filename: devMode ? '[name].css' : '[name].[hash].css',
+      chunkFilename: devMode ? '[id].css' : '[id].[hash].css'
+    })
+  ],
   entry: './src/index.js',
   output: {
     path: join(__dirname, './dist'),
@@ -21,26 +31,18 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        exclude: /node_modules/,
         use: [
           {
-            loader: 'style-loader'
-          },
-          {
-            loader: 'css-loader',
+            loader: MiniCssExtractPlugin.loader,
             options: {
-              importLoaders: 1,
-              modules: {
-                localIdentName: '[name]_[local]_[hash:base64]'
-              },
-              sourceMap: true
+              hmr: devMode
             }
-          }
+          },
+          'css-loader'
         ]
       }
     ]
   },
-  plugins: [htmlPlugin],
   devServer: {
     contentBase: join(__dirname, './public'),
     hot: true,
