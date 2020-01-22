@@ -8,7 +8,10 @@ async function getRegions() {
   )
   return {
     statusCode: 200,
-    body: JSON.stringify({ cities })
+    body: JSON.stringify({ cities }),
+    headers: {
+      'Access-Control-Allow-Origin': '*'
+    }
   }
 }
 
@@ -22,7 +25,10 @@ async function getTrends(evt) {
   const { trends } = data[0]
   return {
     statusCode: 200,
-    body: JSON.stringify({ trends })
+    body: JSON.stringify({ trends }),
+    headers: {
+      'Access-Control-Allow-Origin': '*'
+    }
   }
 }
 
