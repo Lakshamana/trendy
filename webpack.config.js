@@ -1,4 +1,5 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const { join } = require('path')
 
 const htmlPlugin = new HtmlWebpackPlugin({
   template: './public/index.html',
@@ -6,6 +7,11 @@ const htmlPlugin = new HtmlWebpackPlugin({
 })
 
 module.exports = {
+  entry: './src/index.js',
+  output: {
+    path: join(__dirname, './dist'),
+    filename: 'bundle.js'
+  },
   module: {
     rules: [
       {
@@ -32,7 +38,14 @@ module.exports = {
           }
         ]
       }
-    ],
+    ]
   },
-  plugins: [htmlPlugin]
+  plugins: [htmlPlugin],
+  devServer: {
+    contentBase: join(__dirname, './public'),
+    hot: true,
+    inline: true,
+    port: 3000,
+    historyApiFallback: true
+  }
 }
