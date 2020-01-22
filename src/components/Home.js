@@ -4,6 +4,8 @@ const axios = require('../../plugins/axios.plugin')
 // import { Autocomplete } from 'materialize-css/dist/js/materialize'
 // import './css/Home.css'
 
+const baseURL = 'https://bepzok3gq8.execute-api.sa-east-1.amazonaws.com/dev'
+
 // /**
 //  * Use it to materialize css autocomplete
 //  * @param {Array} regionList [region1, region2, ...]
@@ -25,7 +27,7 @@ const Home = () => {
   let autocompleteRef = React.createRef()
 
   useEffect(() => {
-    axios.get('/regions').then(({ data }) => {
+    axios.get(baseURL + '/regions').then(({ data }) => {
       const cities = data.cities.slice(1, 100)
       setRegions(cities)
       console.log('regions:', regions)
