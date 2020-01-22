@@ -3,7 +3,7 @@ const { SecretsManager } = require('aws-sdk')
 const { stringify } = require('querystring')
 
 const axios = require('../plugins/axios.plugin')
-const { twitterAPI } = require('./shared/app.constants')
+const { twitterAPI } = require('../shared/app.constants')
 
 const sm = new SecretsManager()
 
