@@ -69,7 +69,7 @@ async function putSecret(SecretId, secretJson) {
 async function twitterAuth(cb) {
   const tokens = await getSecret('TrendySecrets')
   try {
-    return (await cb(tokens.TWT_BEARER_TOKEN)).data
+    return (await cb()).data
   } catch (e) {
     const formData = stringify({ grant_type: 'client_credentials' })
     const { TWT_API_KEY, TWT_API_SECRET } = tokens
@@ -84,8 +84,34 @@ async function twitterAuth(cb) {
     })
     tokens.TWT_BEARER_TOKEN = data.access_token
     await putSecret('TrendySecrets', tokens)
-    return (await cb(data.access_token)).data
+    axios.defaults.headers.Authorization = 'Bearer ' + data.access_token
+    return (await cb()).data
   }
 }
 
-module.exports = { tokenSign, tokenVerify, getCookie, twitterAuth }
+function generateIAMPolicy(principalId, Effect, Resource) {
+  return (
+    Effect &&
+    Resource && {
+      principalId,
+      policyDocument: {
+        Version: '2012-10-17',
+        Statement: [
+          {
+            Action: 'execute-api:Invoke',
+            Effect,
+            Resource
+          }
+        ]
+      }
+    }
+  )
+}
+
+module.exports = {
+  tokenSign,
+  tokenVerify,
+  getCookie,
+  twitterAuth,
+  generateIAMPolicy
+}

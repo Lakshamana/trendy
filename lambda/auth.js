@@ -1,6 +1,11 @@
 const { hashSync, compareSync } = require('bcrypt')
 const { DynamoDB } = require('aws-sdk')
-const { tokenSign, tokenVerify, getCookie } = require('./utils')
+const {
+  tokenSign,
+  tokenVerify,
+  getCookie,
+  generateIAMPolicy
+} = require('./utils')
 
 const db = new DynamoDB.DocumentClient({ region: 'sa-east-1' })
 
@@ -92,6 +97,7 @@ async function login(evt) {
 
 async function auth(evt) {
   const { accessToken } = getCookie(evt.headers)
+  console.log('accessToken:', accessToken)
   if (!accessToken) {
     return {
       statusCode: 400,
@@ -112,10 +118,8 @@ async function auth(evt) {
     }
   }
 
-  return {
-    statusCode: 200,
-    body: JSON.stringify({})
-  }
+  console.log('accessToken OK!')
+  return generateIAMPolicy('me', 'Allow', evt.methodArn)
 }
 
 module.exports = { register, login, auth }

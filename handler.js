@@ -3,10 +3,8 @@ const { twitterAuth } = require('./lambda/utils')
 const axios = require('./plugins/axios.plugin')
 
 async function getRegions() {
-  const cities = await twitterAuth(token =>
-    axios.get('/1.1/trends/available.json', {
-      headers: { Authorization: 'Bearer ' + token }
-    })
+  const cities = await twitterAuth(() =>
+    axios.get('/1.1/trends/available.json')
   )
   return {
     statusCode: 200,
@@ -16,9 +14,8 @@ async function getRegions() {
 
 async function getTrends(evt) {
   const { id } = evt.queryStringParameters
-  const data = await twitterAuth(token =>
+  const data = await twitterAuth(() =>
     axios.get('/1.1/trends/place.json', {
-      headers: { Authorization: 'Bearer ' + token },
       params: { id }
     })
   )
