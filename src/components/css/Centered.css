@@ -1,0 +1,13 @@
+.d-table {
+  display: table;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+.d-cell {
+  display: table-cell;
+  vertical-align: middle;
+  margin: 0 auto;
+  text-align: center;
+}
