@@ -85,7 +85,10 @@ const Auth = ({ changeUser }) => {
           <label htmlFor='iptPassword'>Password</label>
         </div>
         <label style={{ float: 'right', margin: '1.2em 0' }}>
-          <input type='checkbox' />
+          <input
+            type='checkbox'
+            onChange={e => handleFormChange(e, 'remember')}
+          />
           <span>Remember me</span>
         </label>
         <div style={{ clear: 'both' }} className='container'>
