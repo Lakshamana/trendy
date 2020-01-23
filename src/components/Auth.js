@@ -1,6 +1,8 @@
 /* eslint-disable no-unused-vars */
 import React, { useState } from 'react'
 import Centered from './hoc/Centered'
+import { sendToast } from '../util/util'
+
 const { trendyAxios } = require('../../plugins/axios.plugin')
 
 const Auth = ({ changeUser }) => {
@@ -24,9 +26,13 @@ const Auth = ({ changeUser }) => {
 
   function handleSubmit(e) {
     e.preventDefault()
-    // trendyAxios.post(`/${endpoint}`, inputFormData).then(() => {
-    //   if (endpoint === 'login') changeUser(inputFormData)
-    // })
+    const useFormData = mode === 'login' ? loginFormData : registerFormData
+    trendyAxios
+      .post(`/${mode}`, useFormData)
+      .then(() => {
+        if (mode === 'login') changeUser(useFormData)
+      })
+      .catch(err => sendToast(err))
   }
 
   function handleFormChange(e, field) {
@@ -56,37 +62,32 @@ const Auth = ({ changeUser }) => {
   const loginForm = (
     <div id='loginForm'>
       <form onSubmit={handleSubmit}>
-        <label htmlFor='iptUsername' style={{ float: 'left' }}>
-          Username
-        </label>
-        <input
-          id='iptUsername'
-          ref={loginRefs[0]}
-          type='text'
-          minLength='5'
-          placeholder='Username'
-          className='validate'
-          onChange={e => handleFormChange(e, 'username')}
-        />
-        <br />
-        <label htmlFor='iptPassword' style={{ float: 'left' }}>
-          Password
-        </label>
-        <input
-          id='iptPassword'
-          ref={loginRefs[1]}
-          type='password'
-          minLength='6'
-          placeholder='Password'
-          className='validate'
-          onChange={e => handleFormChange(e, 'password')}
-        />
-        <br />
+        <div className='input-field'>
+          <input
+            id='iptUsername'
+            ref={loginRefs[0]}
+            type='text'
+            minLength='5'
+            className='validate'
+            onChange={e => handleFormChange(e, 'username')}
+          />
+          <label htmlFor='iptUsername'>Username</label>
+        </div>
+        <div className='input-field'>
+          <input
+            id='iptPassword'
+            ref={loginRefs[1]}
+            type='password'
+            minLength='6'
+            className='validate'
+            onChange={e => handleFormChange(e, 'password')}
+          />
+          <label htmlFor='iptPassword'>Password</label>
+        </div>
         <label style={{ float: 'right', margin: '1.2em 0' }}>
           <input type='checkbox' />
           <span>Remember me</span>
         </label>
-        <br />
         <div style={{ clear: 'both' }} className='container'>
           <button
             className='btn waves-effect waves-light btn-small'
@@ -104,24 +105,28 @@ const Auth = ({ changeUser }) => {
   const registerForm = (
     <div id='registerForm'>
       <form onSubmit={handleSubmit}>
-        <input
-          ref={registerRefs[0]}
-          type='text'
-          minLength='5'
-          placeholder='Username'
-          className='validate'
-          onChange={e => handleFormChange(e, 'username')}
-        />
-        <br />
-        <input
-          ref={registerRefs[1]}
-          type='password'
-          minLength='6'
-          placeholder='Password'
-          className='validate'
-          onChange={e => handleFormChange(e, 'password')}
-        />
-        <br />
+        <div className='input-field'>
+          <input
+            id='iptRegUsername'
+            ref={registerRefs[0]}
+            type='text'
+            minLength='5'
+            className='validate'
+            onChange={e => handleFormChange(e, 'username')}
+          />
+          <label htmlFor='iptRegUsername'>Username</label>
+        </div>
+        <div className='input-field'>
+          <input
+            id='iptRegPassword'
+            ref={registerRefs[1]}
+            type='password'
+            minLength='6'
+            className='validate'
+            onChange={e => handleFormChange(e, 'password')}
+          />
+          <label htmlFor='iptRegPassword'>Password</label>
+        </div>
         <button
           className='btn waves-effect waves-light btn-small'
           type='submit'
@@ -154,11 +159,11 @@ const Auth = ({ changeUser }) => {
   return (
     <div className='container' style={{ width: '30vw' }}>
       <div className='card'>
-        <div className='card-title'>{pageContent.title[mode]}</div>
         <div className='card-content'>
+          <div className='card-title'>{pageContent.title[mode]}</div>
           {pageContent.form[mode]}
           <br />
-          <span style={{ float: 'right', 'font-size': '8pt' }}>
+          <span style={{ float: 'right', fontSize: '8pt' }}>
             <a onClick={toggleMode}>{pageContent.toggle[mode]}</a>
           </span>
         </div>
