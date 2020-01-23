@@ -1,54 +1,65 @@
 import React, { useState, useEffect } from 'react'
-// import { Autocomplete } from 'materialize-css/dist/js/materialize'
+import { Autocomplete } from 'materialize-css/dist/js/materialize'
 // import './css/Home.css'
 
 const axios = require('../../plugins/axios.plugin')
 const { trendyAPI } = require('../../shared/app.constants')
 
-// /**
-//  * Use it to materialize css autocomplete
-//  * @param {Array} regionList [region1, region2, ...]
-//  * @param {*} fillWithValue any js-valid value
-//  * @returns {Object} {region1: fillWithValue, region2: fillWithValue, ...}
-//  */
-// function toMap(regionList, fillWithValue) {
-//   return regionList.reduce((a, c) => {
-//     return {
-//       ...a,
-//       [c.woied + ' - ' + c.name]: fillWithValue
-//     }
-//   }, {})
-// }
+/**
+ * Use it to materialize css autocomplete
+ * @param {Array} regionList [region1, region2, ...]
+ * @param {*} fillWithValue any js-valid value
+ * @returns {Object} {region1: fillWithValue, region2: fillWithValue, ...}
+ */
+function toMap(regionList, fillWithValue) {
+  return regionList.reduce((a, c) => {
+    return {
+      ...a,
+      [c.woeid + ' - ' + c.name]: fillWithValue
+    }
+  }, {})
+}
 
 const Home = () => {
-  const [tweets] = useState([])
-  const [regions, setRegions] = useState([])
+  const [topics, setTopics] = useState([])
+  const [, setCities] = useState([])
   let autocompleteRef = React.createRef()
 
   useEffect(() => {
-    axios.get(trendyAPI + '/regions').then(({ data }) => {
-      const cities = data.cities.slice(1, 100)
-      setRegions(cities)
-      console.log('regions:', regions)
-      // Autocomplete.init([autocompleteRef.current], {
-      //   data: toMap(cities, null),
-      //   onAutocomplete: val => console.log('completou com valor:', val)
-      // })
-      // instance = Autocomplete.getInstance(autocompleteRef.current)
-    })
+    axios
+      .get(trendyAPI + '/regions')
+      .then(({ data }) => {
+        const regions = data.cities.slice(1, 101)
+        Autocomplete.init(autocompleteRef.current, {
+          data: toMap(regions, null),
+          onAutocomplete: val => {
+            const id = val.split('-')[0].trim()
+            fetchTrendsByWoeid(id)
+          }
+        })
+        setCities(regions)
+      })
+      .catch(err => console.log(err))
   }, [])
 
-  const renderTweets = tweets.length ? (
-    tweets.map(post => {
+  function fetchTrendsByWoeid(id) {
+    axios
+      .get(trendyAPI + '/trends', {
+        params: { id }
+      })
+      .then(({ data }) => setTopics(data.trends))
+  }
+
+  const renderTopics = topics.length ? (
+    topics.map(post => {
       const { name, url, tweet_volume } = post
       return (
         <div className='card indigo lighten-4' key={name}>
           <div className='card-content'>
             <span className='card-title blue-text'>
-              <strong>{'>> ' + name}</strong>
+              <a href={url}>{name}</a>
             </span>
-            <a href={url}>url</a>
-            <span className='gray-text'>Volume: {tweet_volume}4118</span>
+            <span className='gray-text'>Volume: {tweet_volume}</span>
           </div>
         </div>
       )
@@ -70,7 +81,7 @@ const Home = () => {
             />
           </div>
           <br />
-          {renderTweets}
+          {renderTopics}
         </div>
       </div>
     </div>
