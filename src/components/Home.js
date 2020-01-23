@@ -2,8 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Autocomplete } from 'materialize-css/dist/js/materialize'
 // import './css/Home.css'
 
-const axios = require('../../plugins/axios.plugin')
-const { trendyAPI } = require('../../shared/app.constants')
+const { trendyAxios } = require('../../plugins/axios.plugin')
 
 /**
  * Use it to materialize css autocomplete
@@ -26,8 +25,8 @@ const Home = () => {
   let autocompleteRef = React.createRef()
 
   useEffect(() => {
-    axios
-      .get(trendyAPI + '/regions')
+    trendyAxios
+      .get('/regions')
       .then(({ data }) => {
         const cities = data.cities.slice(1, 101)
         Autocomplete.init(autocompleteRef.current, {
@@ -43,8 +42,8 @@ const Home = () => {
   }, [])
 
   function fetchTrendsByWoeid(id) {
-    axios
-      .get(trendyAPI + '/trends', {
+    trendyAxios
+      .get('/trends', {
         params: { id }
       })
       .then(({ data }) => setTopics(data.trends))

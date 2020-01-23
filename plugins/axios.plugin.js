@@ -1,4 +1,7 @@
 const axios = require('axios').default
-const instance = axios.create()
+const { twitterAPI, trendyAPI } = require('../shared/app.constants')
 
-module.exports = instance
+const twitterAxios = axios.create({ baseURL: twitterAPI })
+const trendyAxios = axios.create({ baseURL: trendyAPI })
+
+module.exports = { twitterAxios, trendyAxios }
