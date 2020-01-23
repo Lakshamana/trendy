@@ -29,15 +29,15 @@ const Home = () => {
     axios
       .get(trendyAPI + '/regions')
       .then(({ data }) => {
-        const regions = data.cities.slice(1, 101)
+        const cities = data.cities.slice(1, 101)
         Autocomplete.init(autocompleteRef.current, {
-          data: toMap(regions, null),
+          data: toMap(cities, null),
           onAutocomplete: val => {
             const id = val.split('-')[0].trim()
             fetchTrendsByWoeid(id)
           }
         })
-        setCities(regions)
+        setCities(cities)
       })
       .catch(err => console.log(err))
   }, [])
@@ -48,6 +48,12 @@ const Home = () => {
         params: { id }
       })
       .then(({ data }) => setTopics(data.trends))
+  }
+
+  function handleFocus(e) {
+    if (e.target.value) {
+      e.target.value = ''
+    }
   }
 
   const renderTopics = topics.length ? (
@@ -78,6 +84,7 @@ const Home = () => {
               id='autocomplete-input'
               className='autocomplete'
               placeholder='Search place...'
+              onFocus={handleFocus}
             />
           </div>
           <br />

@@ -20,7 +20,8 @@ module.exports = {
   // add your custom rules here
   rules: {
     'arrow-parens': "off",
-    'no-console': 'off'
+    'no-console': 'off',
+    'react/prop-types': 0
     // 'no-console': process.env.NODE_ENV === 'development' ? 'off' : 'error'
   }
 }
