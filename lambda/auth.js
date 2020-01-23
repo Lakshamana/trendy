@@ -16,7 +16,10 @@ async function register(evt) {
       statusCode: 400,
       body: JSON.stringify({
         messageCode: 'badRequestPayload'
-      })
+      }),
+      headers: {
+        'Access-Control-Allow-Origin': '*'
+      }
     }
   }
 
@@ -34,7 +37,10 @@ async function register(evt) {
       statusCode: 400,
       body: JSON.stringify({
         messageCode: 'usernameAlreadyExists'
-      })
+      }),
+      headers: {
+        'Access-Control-Allow-Origin': '*'
+      }
     }
   }
 
@@ -56,7 +62,10 @@ async function login(evt) {
       statusCode: 400,
       body: JSON.stringify({
         messageCode: 'badRequestPayload'
-      })
+      }),
+      headers: {
+        'Access-Control-Allow-Origin': '*'
+      }
     }
   }
 
@@ -74,7 +83,10 @@ async function login(evt) {
       statusCode: 400,
       body: JSON.stringify({
         messageCode: 'usernameDoesNotExist'
-      })
+      }),
+      headers: {
+        'Access-Control-Allow-Origin': '*'
+      }
     }
   }
 
@@ -90,7 +102,10 @@ async function login(evt) {
   const accessToken = await tokenSign({ Item, rememberMe })
   return {
     statusCode: 200,
-    headers: { 'Set-Cookie': 'accessToken=' + accessToken },
+    headers: {
+      'Set-Cookie': 'accessToken=' + accessToken,
+      'Access-Control-Allow-Origin': '*'
+    },
     body: JSON.stringify({})
   }
 }
@@ -103,7 +118,10 @@ async function auth(evt) {
       statusCode: 400,
       body: JSON.stringify({
         messageCode: 'badAuthPayload'
-      })
+      }),
+      headers: {
+        'Access-Control-Allow-Origin': '*'
+      }
     }
   }
 
@@ -114,7 +132,10 @@ async function auth(evt) {
       statusCode: 400,
       body: JSON.stringify({
         messageCode: 'badAuthPayload'
-      })
+      }),
+      headers: {
+        'Access-Control-Allow-Origin': '*'
+      }
     }
   }
 
