@@ -15,7 +15,7 @@ export default function checkAuth() {
     const exp = lastLogin + ttl
     if (!user || Date.now() > exp) {
       // Redirect user to auth route
-      reject(new Error('/auth'))
+      reject(false)
     }
     resolve(user)
   })

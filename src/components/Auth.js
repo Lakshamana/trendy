@@ -5,7 +5,9 @@ import { sendToast } from '../util/util'
 
 const { trendyAxios } = require('../../plugins/axios.plugin')
 
-const Auth = ({ changeUser }) => {
+const Auth = props => {
+  const { changeUser } = props
+  console.log(props)
   const [validForm, setValidForm] = useState(false)
 
   const [registerFormData, setRegisterFormData] = useState({
@@ -30,7 +32,12 @@ const Auth = ({ changeUser }) => {
     trendyAxios
       .post(`/${mode}`, useFormData)
       .then(() => {
-        if (mode === 'login') changeUser(useFormData)
+        if (mode === 'login') {
+          changeUser(useFormData)
+          let { from } = location.state || { from: { pathname: '/' } }
+          console.log(from)
+          history.replace(from)
+        }
       })
       .catch(err => sendToast(err))
   }

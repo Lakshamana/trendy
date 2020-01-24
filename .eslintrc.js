@@ -22,7 +22,8 @@ module.exports = {
   rules: {
     'arrow-parens': "off",
     'no-console': 'off',
-    'react/prop-types': 0
+    'react/prop-types': 'off',
+    'react/display-name': 'off'
     // 'no-console': process.env.NODE_ENV === 'development' ? 'off' : 'error'
   }
 }

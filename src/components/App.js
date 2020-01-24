@@ -1,15 +1,15 @@
 import React, { useState } from 'react'
 import { BrowserRouter, Switch, Route } from 'react-router-dom'
-import RouterGuard from 'react-router-guard'
 import 'materialize-css/dist/css/materialize.min.css'
 
 import Home from './Home'
 import About from './About'
 import Navbar from './Navbar'
 import Auth from './Auth'
+import Guard from './Guard'
 import { UserContext, defaultUser } from '../contexts/userContext'
 import { persist } from '../util/util'
-import guardConfig from './guardConfig'
+import authGuard from './guards/authGuard'
 
 function App() {
   const [user, setUser] = useState(defaultUser)
@@ -23,14 +23,16 @@ function App() {
   return (
     <UserContext.Provider value={user}>
       <BrowserRouter>
-        <RouterGuard config={guardConfig} />
         <Navbar />
         <Switch>
-          <Route exact path='/' component={Home} />
+          <Route
+            path='/auth'
+            render={props => <Auth {...props} changeUser={changeUser} />}
+          />
           <Route path='/about' component={About} />
-          <Route path='/auth'>
-            <Auth changeUser={changeUser} />
-          </Route>
+          <Guard guard={authGuard} redirectTo='/auth'>
+            <Route exact path='/' component={Home} />
+          </Guard>
         </Switch>
       </BrowserRouter>
     </UserContext.Provider>
