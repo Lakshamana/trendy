@@ -5,10 +5,11 @@ module.exports = {
     node: true,
     es6: true
   },
+  parser: 'babel-eslint',
   parserOptions: {
-    parser: 'babel-eslint',
     ecmaVersion: 2018,
-    sourceType: 'module'
+    sourceType: 'module',
+    allowImportExportEverywhere: true
   },
   extends: [
     'eslint:recommended',

@@ -3,10 +3,9 @@ const { SecretsManager } = require('aws-sdk')
 const { stringify } = require('querystring')
 
 const { twitterAxios } = require('../plugins/axios.plugin')
+const { SECS_PER_DAY } = require('../shared/app.constants')
 
 const sm = new SecretsManager()
-
-const SECS_PER_DAY = 60 * 60 * 24
 
 async function tokenSign(user, rememberMeFactor = 7) {
   const { rememberMe } = user
