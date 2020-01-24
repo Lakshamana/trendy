@@ -6,8 +6,8 @@ import { sendToast } from '../util/util'
 const { trendyAxios } = require('../../plugins/axios.plugin')
 
 const Auth = props => {
-  const { changeUser } = props
   console.log(props)
+  const { changeUser, location, history } = props
   const [validForm, setValidForm] = useState(false)
 
   const [registerFormData, setRegisterFormData] = useState({

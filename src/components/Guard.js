@@ -18,7 +18,7 @@ function Guard({ children, guard, redirectTo, ...rest }) {
         setRenderFn(() => () => children)
       })
       .catch(() => {
-        setRenderFn(() => () => (
+        setRenderFn(() => ({ location }) => (
           <Redirect
             to={{
               pathname: redirectTo,
