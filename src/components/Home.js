@@ -23,6 +23,7 @@ const Home = () => {
   const [topics, setTopics] = useState([])
   const [, setCities] = useState([])
   let autocompleteRef = React.createRef()
+  const [choosenCity, setChoosenCity] = useState('')
 
   useEffect(() => {
     trendyAxios
@@ -34,6 +35,7 @@ const Home = () => {
           onAutocomplete: val => {
             const id = val.split('-')[0].trim()
             fetchTrendsByWoeid(id)
+            setChoosenCity(val.split('-')[1].trim())
           }
         })
         setCities(cities)
@@ -64,25 +66,27 @@ const Home = () => {
             <span className='card-title blue-text'>
               <a href={url}>{name}</a>
             </span>
-            <span className='gray-text'>Volume: {tweet_volume}</span>
+            <span className='gray-text'>Volume: {tweet_volume || 0}</span>
           </div>
         </div>
       )
     })
-  ) : (
+  ) : !choosenCity ? (
     <div className='center'>Choose a place first!</div>
+  ) : (
+    <div className='center'>Loading...</div>
   )
   return (
     <div className='container'>
       <div className='row'>
         <div className='col s12'>
           <div className='input-field'>
+            <label htmlFor='ipt'>Search place...</label>
             <input
               ref={autocompleteRef}
               type='text'
-              id='autocomplete-input'
+              id='ipt'
               className='autocomplete'
-              placeholder='Search place...'
               onFocus={handleFocus}
             />
           </div>

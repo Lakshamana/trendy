@@ -1,14 +1,13 @@
 /* eslint-disable no-unused-vars */
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Centered from './hoc/Centered'
 import { sendToast } from '../util/util'
 
 const { trendyAxios } = require('../../plugins/axios.plugin')
 
-const Auth = props => {
-  console.log(props)
-  const { changeUser, location, history } = props
-  const [validForm, setValidForm] = useState(false)
+const Auth = ({ changeUser, location, history }) => {
+  const [loginValidForm, setLoginValidForm] = useState(false)
+  const [registerValidForm, setRegisterValidForm] = useState(false)
 
   const [registerFormData, setRegisterFormData] = useState({
     username: '',
@@ -23,23 +22,20 @@ const Auth = props => {
 
   const [mode, setMode] = useState('login')
 
-  const loginRefs = Array.from({ length: 2 }, () => React.createRef())
-  const registerRefs = Array.from({ length: 2 }, () => React.createRef())
+  let loginRefs = Array.from({ length: 2 }, () => React.createRef())
+  let registerRefs = Array.from({ length: 2 }, () => React.createRef())
 
   function handleSubmit(e) {
     e.preventDefault()
     const useFormData = mode === 'login' ? loginFormData : registerFormData
-    trendyAxios
-      .post(`/${mode}`, useFormData)
-      .then(() => {
-        if (mode === 'login') {
-          changeUser(useFormData)
-          let { from } = location.state || { from: { pathname: '/' } }
-          console.log(from)
-          history.replace(from)
-        }
-      })
-      .catch(err => sendToast(err))
+    useFormData.rememberMe = useFormData.rememberMe === 'on'
+    trendyAxios.post(`/${mode}`, useFormData).then(() => {
+      if (mode === 'login') {
+        changeUser(useFormData)
+        const { from } = location.state || { from: { pathname: '/' } }
+        history.replace(from)
+      } else setMode('login')
+    })
   }
 
   function handleFormChange(e, field) {
@@ -51,15 +47,26 @@ const Auth = props => {
       ...formData,
       [field]: e.target.value
     })
-    checkFormValidity()
   }
 
+  useEffect(() => {
+    checkFormValidity()
+  }, [registerFormData, loginFormData])
+
   function checkFormValidity() {
+    console.log('check!')
     const useRefs = mode === 'login' ? loginRefs : registerRefs
-    const valid = useRefs.every(
-      ({ current }) => current.value && current.validity.valid
-    )
-    setValidForm(valid)
+    const valid = useRefs.every(({ current }) => {
+      console.log(
+        current.id + ': ' + current.value,
+        current.validity.valid,
+        current.validity
+      )
+      return current && current.value && current.validity.valid
+    })
+    console.log('valid:', valid)
+    const useSetFn = mode === 'login' ? setLoginValidForm : setRegisterValidForm
+    useSetFn(valid)
   }
 
   function toggleMode() {
@@ -76,6 +83,8 @@ const Auth = props => {
             type='text'
             minLength='5'
             className='validate'
+            required
+            value={loginFormData.username}
             onChange={e => handleFormChange(e, 'username')}
           />
           <label htmlFor='iptUsername'>Username</label>
@@ -87,6 +96,8 @@ const Auth = props => {
             type='password'
             minLength='6'
             className='validate'
+            required
+            value={loginFormData.password}
             onChange={e => handleFormChange(e, 'password')}
           />
           <label htmlFor='iptPassword'>Password</label>
@@ -94,7 +105,7 @@ const Auth = props => {
         <label style={{ float: 'right', margin: '1.2em 0' }}>
           <input
             type='checkbox'
-            onChange={e => handleFormChange(e, 'remember')}
+            onChange={e => handleFormChange(e, 'rememberMe')}
           />
           <span>Remember me</span>
         </label>
@@ -103,7 +114,7 @@ const Auth = props => {
             className='btn waves-effect waves-light btn-small'
             type='submit'
             name='action'
-            disabled={!validForm}
+            disabled={!loginValidForm}
           >
             Submit
           </button>
@@ -122,6 +133,7 @@ const Auth = props => {
             type='text'
             minLength='5'
             className='validate'
+            value={registerFormData.username}
             onChange={e => handleFormChange(e, 'username')}
           />
           <label htmlFor='iptRegUsername'>Username</label>
@@ -133,6 +145,7 @@ const Auth = props => {
             type='password'
             minLength='6'
             className='validate'
+            value={registerFormData.password}
             onChange={e => handleFormChange(e, 'password')}
           />
           <label htmlFor='iptRegPassword'>Password</label>
@@ -141,7 +154,7 @@ const Auth = props => {
           className='btn waves-effect waves-light btn-small'
           type='submit'
           name='action'
-          disabled={!validForm}
+          disabled={!registerValidForm}
         >
           Register
         </button>

@@ -9,7 +9,7 @@ import Auth from './Auth'
 import Guard from './Guard'
 import { UserContext, defaultUser } from '../contexts/userContext'
 import { persist } from '../util/util'
-import authGuard from './guards/authGuard'
+import authGuard from './guard/authGuard'
 
 function App() {
   const [user, setUser] = useState(defaultUser)

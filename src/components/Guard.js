@@ -28,8 +28,6 @@ function Guard({ children, guard, redirectTo, ...rest }) {
         ))
       })
   }, [])
-  console.log('render:', renderFn)
-  console.log(redirectTo)
   return renderFn ? (
     <Route {...rest} render={renderFn} />
   ) : (

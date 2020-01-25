@@ -1,23 +1,17 @@
 import { toast } from 'materialize-css/dist/js/materialize'
 import cookies from 'js-cookie'
 
-function sendToast() {
-  toast({ html: 'Error!' })
+function sendToast(msg) {
+  toast({ html: msg })
 }
 
 function persist(key, val) {
   if (!key) return
-  const flatten = !(typeof value === 'string') ? JSON.stringify(val) : val
-  cookies.set(key, flatten)
+  cookies.set(key, val)
 }
 
 function recover(key) {
-  const val = key && cookies.get(key)
-  try {
-    return JSON.parse(val)
-  } catch (e) {
-    return val
-  }
+  return key && cookies.get(key)
 }
 
 export { sendToast, persist, recover }
