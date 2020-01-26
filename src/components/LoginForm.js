@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-const LoginForm = () => {
+const LoginForm = ({ handleSubmit }) => {
   const [loginValidForm, setLoginValidForm] = useState(false)
 
   const [loginFormData, setLoginFormData] = useState({
@@ -12,7 +12,6 @@ const LoginForm = () => {
   let [refs] = useState(Array.from({ length: 2 }, () => React.createRef()))
 
   function checkFormValidity() {
-    console.log('check!')
     const valid = refs.every(
       ({ current }) => current && current.value && current.validity.valid
     )
@@ -28,10 +27,10 @@ const LoginForm = () => {
   }
 
   return (
-    <form>
+    <form onSubmit={e => handleSubmit(e, loginFormData)}>
       <div className='input-field'>
         <input
-          name='username'
+          id='username'
           ref={refs[0]}
           type='text'
           minLength='5'
@@ -39,11 +38,11 @@ const LoginForm = () => {
           value={loginFormData.username}
           onChange={e => handleFormChange(e, 'username')}
         />
-        <label>Username</label>
+        <label htmlFor='username'>Username</label>
       </div>
       <div className='input-field'>
         <input
-          name='password'
+          id='password'
           ref={refs[1]}
           type='password'
           minLength='6'
@@ -52,7 +51,7 @@ const LoginForm = () => {
           value={loginFormData.password}
           onChange={e => handleFormChange(e, 'password')}
         />
-        <label htmlFor='iptPassword'>Password</label>
+        <label htmlFor='password'>Password</label>
       </div>
       <label style={{ float: 'right', margin: '1.2em 0' }}>
         <input

@@ -14,13 +14,19 @@ const Auth = ({ changeUser, location, history }) => {
   function handleSubmit(e, formData) {
     e.preventDefault()
     formData.rememberMe = formData.rememberMe === 'on'
-    trendyAxios.post(`/${mode}`, formData).then(() => {
-      if (mode === 'login') {
-        changeUser(formData)
-        const { from } = location.state || { from: { pathname: '/' } }
-        history.replace(from)
-      } else setMode('login')
-    })
+    trendyAxios
+      .post(`/${mode}`, formData)
+      .then(() => {
+        if (mode === 'login') {
+          changeUser(formData)
+          const { from } = location.state || { from: { pathname: '/' } }
+          history.replace(from)
+        } else {
+          sendToast('Account created successfully!')
+          setMode('login')
+        }
+      })
+      .catch(({ response }) => sendToast(response.data.messageCode))
   }
 
   function toggleMode() {
@@ -34,8 +40,8 @@ const Auth = ({ changeUser, location, history }) => {
     },
 
     form: {
-      login: <LoginForm />,
-      register: <RegisterForm />
+      login: <LoginForm handleSubmit={handleSubmit} />,
+      register: <RegisterForm handleSubmit={handleSubmit} />
     },
 
     toggle: {

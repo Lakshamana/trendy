@@ -8,7 +8,7 @@ import Navbar from './Navbar'
 import Auth from './Auth'
 import Guard from './Guard'
 import { UserContext, defaultUser } from '../contexts/userContext'
-import { persist } from '../util/util'
+import { persist, remove } from '../util/util'
 import authGuard from './guard/authGuard'
 
 function App() {
@@ -20,10 +20,15 @@ function App() {
     persist('lastLogin', Date.now())
   }
 
+  function logoutUser() {
+    remove('username')
+    remove('lastLogin')
+  }
+
   return (
     <UserContext.Provider value={user}>
       <BrowserRouter>
-        <Navbar />
+        <Navbar logoutUser={logoutUser} />
         <Switch>
           <Route
             path='/auth'

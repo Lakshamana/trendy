@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-const RegisterForm = () => {
+const RegisterForm = ({ handleSubmit }) => {
   const [registerValidForm, setRegisterValidForm] = useState(false)
 
   const [registerFormData, setRegisterFormData] = useState({
@@ -11,7 +11,6 @@ const RegisterForm = () => {
   let [refs] = useState(Array.from({ length: 2 }, () => React.createRef()))
 
   function checkFormValidity() {
-    console.log('check!')
     const valid = refs.every(
       ({ current }) => current && current.value && current.validity.valid
     )
@@ -27,10 +26,10 @@ const RegisterForm = () => {
   }
 
   return (
-    <form>
+    <form onSubmit={e => handleSubmit(e, registerFormData)}>
       <div className='input-field'>
         <input
-          name='username'
+          id='username'
           ref={refs[0]}
           type='text'
           className='validate'
@@ -38,11 +37,11 @@ const RegisterForm = () => {
           minLength='5'
           onChange={e => handleFormChange(e, 'username')}
         />
-        <label>Username</label>
+        <label htmlFor='username'>Username</label>
       </div>
       <div className='input-field'>
         <input
-          name='password'
+          id='password'
           ref={refs[1]}
           type='password'
           className='validate'
@@ -51,15 +50,8 @@ const RegisterForm = () => {
           value={registerFormData.password}
           onChange={e => handleFormChange(e, 'password')}
         />
-        <label htmlFor='iptPassword'>Password</label>
+        <label htmlFor='password'>Password</label>
       </div>
-      <label style={{ float: 'right', margin: '1.2em 0' }}>
-        <input
-          type='checkbox'
-          onChange={e => handleFormChange(e, 'rememberMe')}
-        />
-        <span>Remember me</span>
-      </label>
       <div style={{ clear: 'both' }} className='container'>
         <button
           className='btn waves-effect waves-light btn-small'

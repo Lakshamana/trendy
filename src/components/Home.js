@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Autocomplete } from 'materialize-css/dist/js/materialize'
-// import './css/Home.css'
+import './css/Home.css'
+import { sendToast } from '../util/util'
 
 const { trendyAxios } = require('../../plugins/axios.plugin')
 
@@ -40,7 +41,7 @@ const Home = () => {
         })
         setCities(cities)
       })
-      .catch(err => console.log(err))
+      .catch(({ response }) => sendToast(response.data.messageCode))
   }, [])
 
   function fetchTrendsByWoeid(id) {
@@ -72,26 +73,30 @@ const Home = () => {
       )
     })
   ) : !choosenCity ? (
-    <div className='center'>Choose a place first!</div>
+    <div className='center white-text'>Choose a place first!</div>
   ) : (
-    <div className='center'>Loading...</div>
+    <div className='center white-text'>Loading...</div>
   )
   return (
-    <div className='container'>
-      <div className='row'>
-        <div className='col s12'>
-          <div className='input-field'>
-            <label htmlFor='ipt'>Search place...</label>
-            <input
-              ref={autocompleteRef}
-              type='text'
-              id='ipt'
-              className='autocomplete'
-              onFocus={handleFocus}
-            />
+    <div className='img-back'>
+      <div className='smoke-layer'>
+        <div className='container'>
+          <div className='row'>
+            <div className='col s12'>
+              <div className='input-field ipt-style'>
+                <label htmlFor='ipt'>Search place...</label>
+                <input
+                  ref={autocompleteRef}
+                  type='text'
+                  id='ipt'
+                  className='autocomplete'
+                  onFocus={handleFocus}
+                />
+              </div>
+              <br />
+              {renderTopics}
+            </div>
           </div>
-          <br />
-          {renderTopics}
         </div>
       </div>
     </div>

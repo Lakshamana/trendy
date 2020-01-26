@@ -10,8 +10,13 @@ function persist(key, val) {
   cookies.set(key, val)
 }
 
+function remove(key, val) {
+  if (!key) return
+  cookies.remove(key, val)
+}
+
 function recover(key) {
   return key && cookies.get(key)
 }
 
-export { sendToast, persist, recover }
+export { sendToast, persist, recover, remove }

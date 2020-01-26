@@ -1,15 +1,18 @@
 /* --- Smokes and backgrounds --- */
 
 .img-back {
-  background: url('../assets/grid.jpg');
+  background-image: url('../../assets/grid.jpg');
+  background-repeat: repeat;
+  min-width: 100%;
+  min-height: 100vh;
 }
 
 .smoke-layer {
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(33, 39, 51, 0.527);
+  min-width: 100%;
+  min-height: 100vh;
+  background: rgba(9, 16, 29, 0.699);
 }
 
 .smoke-ipt-bg {
@@ -19,10 +22,10 @@
 /* --- Input styles --- */
 .ipt-style {
   border-radius: 9px;
-  border: 1px solid white;
+  /* border: 1px solid white; */
   padding: 3px;
 }
 
-.ipt-style input[type=text]:focus {
+.ipt-style input[type=text] {
   color: #fff;
 }
