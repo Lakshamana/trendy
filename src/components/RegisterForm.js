@@ -1,8 +1,4 @@
 import React, { useState } from 'react'
-import Form from 'react-validation/build/form'
-import Input from 'react-validation/build/input'
-
-import { lt, required } from '../util/validators'
 
 const RegisterForm = () => {
   const [registerValidForm, setRegisterValidForm] = useState(false)
@@ -12,20 +8,13 @@ const RegisterForm = () => {
     password: ''
   })
 
-  let usernameRef, passwordRef
+  let [refs] = useState(Array.from({ length: 2 }, () => React.createRef()))
 
   function checkFormValidity() {
     console.log('check!')
-    const refs = [usernameRef, passwordRef]
-    const valid = refs.every(({ current }) => {
-      console.log(
-        current.id + ': ' + current.value,
-        current.validity.valid,
-        current.validity
-      )
-      return current && current.value && current.validity.valid
-    })
-    console.log('valid:', valid)
+    const valid = refs.every(
+      ({ current }) => current && current.value && current.validity.valid
+    )
     setRegisterValidForm(valid)
   }
 
@@ -38,15 +27,15 @@ const RegisterForm = () => {
   }
 
   return (
-    <Form>
+    <form>
       <div className='input-field'>
-        <Input
+        <input
           name='username'
-          ref={ref => (usernameRef = ref)}
+          ref={refs[0]}
           type='text'
-          minLength='5'
           className='validate'
-          validators={[required, lt]}
+          required
+          minLength='5'
           onChange={e => handleFormChange(e, 'username')}
         />
         <label>Username</label>
@@ -54,11 +43,11 @@ const RegisterForm = () => {
       <div className='input-field'>
         <input
           name='password'
-          ref={ref => (passwordRef = ref)}
+          ref={refs[1]}
           type='password'
-          minLength='6'
           className='validate'
           required
+          minLength='6'
           value={registerFormData.password}
           onChange={e => handleFormChange(e, 'password')}
         />
@@ -81,7 +70,7 @@ const RegisterForm = () => {
           Submit
         </button>
       </div>
-    </Form>
+    </form>
   )
 }
 
