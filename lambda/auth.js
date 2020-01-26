@@ -51,7 +51,13 @@ async function register(evt) {
 
   await db.put(params).promise()
 
-  return { statusCode: 201, body: JSON.stringify({}) }
+  return {
+    statusCode: 201,
+    body: JSON.stringify({}),
+    headers: {
+      'Access-Control-Allow-Origin': '*'
+    }
+  }
 }
 
 async function login(evt) {
@@ -95,7 +101,10 @@ async function login(evt) {
       statusCode: 400,
       body: JSON.stringify({
         messageCode: 'authDataMismatch'
-      })
+      }),
+      headers: {
+        'Access-Control-Allow-Origin': '*'
+      }
     }
   }
 
