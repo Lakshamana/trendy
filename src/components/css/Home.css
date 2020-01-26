@@ -1,20 +1,3 @@
-/* --- Smokes and backgrounds --- */
-
-.img-back {
-  background-image: url('../../assets/grid.jpg');
-  background-repeat: repeat;
-  min-width: 100%;
-  min-height: 100vh;
-}
-
-.smoke-layer {
-  top: 0;
-  left: 0;
-  min-width: 100%;
-  min-height: 100vh;
-  background: rgba(9, 16, 29, 0.699);
-}
-
 .smoke-ipt-bg {
   background-color: rgba(24, 26, 29, 0.856);
 }
