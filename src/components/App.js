@@ -9,6 +9,7 @@ import Auth from './Auth'
 import Guard from './Guard'
 import { persist, remove } from '../util/util'
 import authGuard from './guard/authGuard'
+import withFooter from './Footer'
 
 function App() {
   function changeUser(user) {
@@ -22,20 +23,22 @@ function App() {
   }
 
   return (
-    <BrowserRouter>
-      <Navbar logoutUser={logoutUser} />
-      <Switch>
-        <Route
-          path='/auth'
-          render={props => <Auth {...props} changeUser={changeUser} />}
-        />
-        <Route path='/about' component={About} />
-        <Guard guard={authGuard} redirectTo='/auth'>
-          <Route exact path='/' component={Home} />
-        </Guard>
-      </Switch>
-    </BrowserRouter>
+    <div className='content'>
+      <BrowserRouter>
+        <Navbar logoutUser={logoutUser} />
+        <Switch>
+          <Route
+            path='/auth'
+            render={props => <Auth {...props} changeUser={changeUser} />}
+          />
+          <Route path='/about' component={About} />
+          <Guard guard={authGuard} redirectTo='/auth'>
+            <Route exact path='/' component={Home} />
+          </Guard>
+        </Switch>
+      </BrowserRouter>
+    </div>
   )
 }
 
-export default App
+export default withFooter(App)

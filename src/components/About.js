@@ -10,8 +10,8 @@ const About = () => {
   return (
     <div className='container'>
       <div className='card'>
-        <div className='card-title'>About</div>
         <div className='card-content'>
+          <div className='card-title'>About</div>
           Lorem ipsum dolor, sit amet consectetur adipisicing elit. Excepturi,
           doloribus ipsum. Vel harum dolor voluptatibus omnis voluptate velit
           officia fuga, adipisci expedita! Eaque dicta reprehenderit explicabo

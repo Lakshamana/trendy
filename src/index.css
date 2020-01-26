@@ -6,6 +6,8 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: antialiased;
   background: url('assets/grid.jpg') repeat;
+  min-height: 100vh;
+  overflow-x: hidden;
 }
 
 code {
@@ -13,16 +15,15 @@ code {
     monospace;
 }
 
-/* .img-back {
-  
-  min-width: 100%;
-  min-height: 100vh;
-} */
 #app {
-  top: 0;
-  left: 0;
-  position: absolute;
-  min-width: 100%;
+  display: flex;
+  flex-direction: column;
+  min-width: 100vw;
   min-height: 100vh;
   background: rgba(9, 16, 29, 0.699);
 }
+
+.content {
+  flex: 1 0 auto;
+}
+

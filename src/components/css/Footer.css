@@ -1,0 +1,4 @@
+.page-footer {
+  flex-shrink: 0;
+  height: 10vh; 
+}
