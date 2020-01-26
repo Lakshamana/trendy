@@ -1,15 +1,15 @@
-import React, { useContext } from 'react'
+import React from 'react'
 import { Link, withRouter } from 'react-router-dom'
 import './css/Navbar.css'
-import { UserContext } from '../contexts/userContext'
+import { recover } from '../util/util'
 
 const Navbar = ({ logoutUser, location, history }) => {
-  const context = useContext(UserContext)
-
   const handleLogout = () => {
     logoutUser()
     history.go('/')
   }
+
+  const user = recover('username')
 
   return (
     <nav className='nav-wrapper nav-custom blue lighten-1'>
@@ -17,14 +17,18 @@ const Navbar = ({ logoutUser, location, history }) => {
         Trendy
       </Link>
       <ul className='right'>
-        {context.username && <li>Hello, {context.username}</li>}
+        {user && (
+          <li>
+            <span className='mx'>Hello, {user}</span>
+          </li>
+        )}
         <li className={location.pathname === '/about' ? 'active' : ''}>
           <Link to='/about'>About</Link>
         </li>
         <li>
-          {context.username && (
+          {user && (
             <button
-              className='waves-effect waves-light red btn'
+              className='waves-effect waves-light red btn mx'
               onClick={handleLogout}
             >
               Logout
