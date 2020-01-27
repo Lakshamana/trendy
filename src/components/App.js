@@ -10,6 +10,7 @@ import Guard from './Guard'
 import { persist, remove } from '../util/util'
 import authGuard from './guard/authGuard'
 import withFooter from './Footer'
+import ErrorPage from './ErrorPage'
 
 function App() {
   function changeUser(user) {
@@ -32,6 +33,7 @@ function App() {
             render={props => <Auth {...props} changeUser={changeUser} />}
           />
           <Route path='/about' component={About} />
+          <Route path={/\/.+/} component={ErrorPage} />
           <Guard guard={authGuard} redirectTo='/auth'>
             <Route exact path='/' component={Home} />
           </Guard>
