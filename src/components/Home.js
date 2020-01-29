@@ -30,7 +30,7 @@ const Home = () => {
     trendyAxios
       .get('/regions')
       .then(({ data }) => {
-        const cities = data.cities.slice(1, 101)
+        const cities = data.cities
         Autocomplete.init(autocompleteRef.current, {
           data: toMap(cities, null),
           onAutocomplete: val => {
